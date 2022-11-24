@@ -10,6 +10,7 @@
     "@slidev/cli": "^0.37.0",
     "@slidev/theme-default": "*",
     "@slidev/theme-seriph": "*",
+    "slidev-theme-academic": "^1.1.0",
     "slidev-theme-light-icons": "^1.0.2"
   }
 }

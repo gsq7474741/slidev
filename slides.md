@@ -9,7 +9,7 @@ class: 'text-center'
 # https://sli.dev/custom/highlighters.html
 highlighter: shiki
 # show line numbers in code blocks
-lineNumbers: false
+lineNumbers: true
 # some information about the slides, markdown enabled
 info: |
   ## 从MLP到深度学习框架
@@ -20,6 +20,8 @@ drawings:
   persist: false
 # use UnoCSS
 css: unocss
+colorSchema: 'light'
+
 ---
 
 # 从MLP到深度学习框架
@@ -70,7 +72,6 @@ The last comment block of each slide will be treated as slide notes. It will be 
  -->
 
 ---
-
 
 # MLP
 
@@ -153,28 +154,157 @@ C --> D[模型训练]
 ```
 
 ---
+layout: two-cols
+---
 
 # 反向传播范式下的数据流
 
 ```mermaid {scale:1}
 graph TD
-D[数据加载器] --data--> M[模型] -- output--> G
-G[梯度计算] -.grad.-> O[优化器] -.delta.-> M
+D[数据集] --data--> M[模型] -- output--> G
+G[梯度计算] -.grad.-> O[优化算法] -.delta.-> M
 M -- output--> ACC[精度评估]
 
 ```
 
+::right::
+# 对应的功能模块
+
+```mermaid {theme:'neutral', scale:1}
+graph LR
+D[数据加载器]
+M[模型构造]
+T[数据载体]
+O[优化器]
+```
+
+
+---
+layout: image-left
+image: /nn.svg
 ---
 
+# MLP as DL model
+
+<!-- - 本质上是矩阵乘法和激活函数
+- 每个隐层形式相似
+- 数据从前向后计算
+
+***
+
+
+- 按层抽象
+- 函数复用
+- 前向逻辑 -->
+
+
+<div grid="~ cols-1 gap-8" m="-t-2">
+
+
+- 本质上是矩阵乘法和激活函数
+- 每个隐层形式相似
+- 数据从前向后计算
+
+***
+
+
+- 按层抽象
+- 函数复用
+- 前向逻辑
+
+</div>
+
+---
+layout: two-cols
+image: https://pica.zhimg.com/80/v2-6dd8366ecb7fdb05c65c284d2468321e_1440w.webp
+imageOrder: 2
+---
+
+# 数据的表示
+
+## 张量 Tensor
+
+*多维数组*
+
+- 0维：标量，3
+- 1维：数组，[0, 1, 3, 5]
+- 2维：矩阵，$\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$
+- 3维：多个二维张量堆叠起来
+
+::right::
+
+<img src="https://pica.zhimg.com/80/v2-6dd8366ecb7fdb05c65c284d2468321e_1440w.webp" width="900"/>
+
+---
+layout: image-x
+image: https://www.paddlepaddle.org.cn/documentation/docs/zh/_images/autograd_image_4-1.png
+left: false
+---
+
+# AutoGrad
+
+基于trace的机制
+- Tensor 运算作为计算图
+- eager or lazy？
+- 链式存储：[data, grad, creator, creation_op]
 
 
 ---
 
+# 算子
+
+接受 Tensor作为输入，执行计算逻辑，输出 Tensor
+
+- 前向：$f(x_1,x_2,\dots)=...$
+- 反向：$\frac{\partial}{\partial x_1}f(x_1), \frac{\partial}{\partial x_2}f(x_2), ...$
+
+算子可以是任何对张量的操作，不局限于数学运算：
+
+例如 reshape
+```python
+'h w c -> w h c' # 维度重排
+
+'b h w c -> (b h) w c'  # 在h维度合并
+
+```
+
+
+---
+layout: image-x
+image: https://pic3.zhimg.com/v2-672fc549a08c652b81ab2e6be489ff32_b.webp
+upperImage: https://pic3.zhimg.com/v2-672fc549a08c652b81ab2e6be489ff32_b.webp
+equal: true
+left: false
+---
+
+# 网络结构的抽象
+
+
+将一个乘法和加法封装为一个Linear层
+
+$$
+\begin{array}{c}
+
+out = wx+b
+
+\end{array}
+$$
+
+```python
+class Linear:
+  def __init__(self):
+    self.w = random weight
+    self.b = random bias
+
+  def forward(self,x):
+    return w @ x + b 
+
+```
 
 
 
 
-
+---
 
 # What is Slidev?
 
