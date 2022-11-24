@@ -12,10 +12,9 @@ highlighter: shiki
 lineNumbers: false
 # some information about the slides, markdown enabled
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
+  ## 从MLP到深度学习框架
+  Presentation by 高崧淇.
+  https://github.com/gsq7474741
 # persist drawings in exports and build
 drawings:
   persist: false
@@ -49,6 +48,133 @@ The last comment block of each slide will be treated as slide notes. It will be 
 -->
 
 ---
+
+# 人工智能与深度学习
+
+我们尝试让机器学会思考，但机器真的会思考吗？机器怎么思考？
+我们追求的智能究竟是什么？
+
+
+<img src="https://948021660-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-LYtTdBhaX9EsGjMVkHV%2F-LYzhzSh55h1KzjtX1qG%2F-LYziGoVyFXqVWqqtZsI%2Fimage.png?alt=media&token=9ff95774-9f9e-44e6-93df-b1da30797345" class="m-0 h-100" />
+
+<!-- AI技术究竟是什么，又经历了怎样的发展历程呢。
+大家知道，人工智能经过了大几十年的发展，从四五十年代开始到现在已经经历了三次浪潮。一般会认为，现在所处的是人工智能的第三波浪潮当中。第三波浪潮当中里面有一个非常核心的驱动力，大家一般叫它深度学习。
+这里先给大家普及AI常用的三个概念：人工智能、机器学习、深度学习
+人工智能：能够感知、推理、行动和适应的程序
+机器学习：能够随着数据量的增加不断改进性能的算法。现在人工智能的实现主要途径是通过计算机从数据中学习。
+深度学习：机器学习的一个子集，是机器学习的一种方式：利用多层神经网络从大量数据中进行学习
+
+深度学习虽然是第三波驱动力，但是它本身的萌芽发展也经过了很多年，从理论的突破到技术上的突破，再到应用上的突破，再到今天行业的应用和更广泛的社会影响，其实它经过很长时间。近些年算力、数据、和算法方面的大规模提升和突破，使得人工智能深度学习能实现大规模的应用落地。
+
+深度学习这几年应用越来越多，可能有一个标志性的事件大家都知道，就是阿尔法狗。2016年基于深度学习的阿尔法狗当时击败了人类冠军，使大家对深度学习的了解越来越多。
+ -->
+
+---
+
+
+# MLP
+
+<img src="https://cdn-images-1.medium.com/max/2600/0*PuscwCsUr09xZ0SJ.gif" class="m-0 h-100" />
+
+---
+layout: image-right
+image: https://source.unsplash.com/collection/94734566/1920x1080
+---
+# MLP as ML model
+```python{1-3|4-11|12-17|all}
+# 数据
+X = np.array([[0,0],[0,1], [1,0],[1,1]])
+T = np.array([[0],[1],[1],[0]])
+
+# 定义一个2层的神经网络：2-10-1
+# 输入层2个神经元，隐藏层10个神经元，输出层1个神经元
+
+W1 = np.random.random([2,10])
+W2 = np.random.random([10,1])
+b1 = np.zeros([10])
+b2 = np.zeros([1])
+
+def sigmoid(x):
+ return 1 / (1 + np.exp(-x))
+# 定义sigmoid函数导数
+def dsigmoid(x):
+ return x * (1 - x)
+```
+
+
+---
+layout: image-right
+image: https://source.unsplash.com/collection/94734566/1920x1080
+---
+
+# MLP as ML model
+
+```python {3-5|7-11|12-17|all}
+def update():
+ global X, T, W1, W2, lr, b1, b2
+# forward
+ L1 = sigmoid(np.dot(X, W1) + b1)
+ L2 = sigmoid(np.dot(L1, W2) + b2)
+# calculate gradient
+ delta_L2 = (T - L2) * dsigmoid(L2)
+ delta_L1 = delta_L2.dot(W2.T) * dsigmoid(L1)
+
+ delta_W2 = lr * L1.T.dot(delta_L2) / X.shape[0]
+ delta_W1 = lr * X.T.dot(delta_L1) / X.shape[0]
+ # update weight
+ W2 = W2 + delta_W2
+ W1 = W1 + delta_W1
+
+ b2 = b2 + lr * np.mean(delta_L2, axis=0)
+ b1 = b1 + lr * np.mean(delta_L1, axis=0)
+
+```
+
+---
+layout: fact
+---
+
+# 扩展性?
+
+更多的层？
+更多的函数？
+不同优化器？
+
+
+---
+layout: statement
+---
+# 机器学习的一般流程
+
+```mermaid {scale: 1.5}
+graph LR
+B[数据处理] --> C[模型构建]
+C --> D[模型训练]
+```
+
+---
+
+# 反向传播范式下的数据流
+
+```mermaid {scale:1}
+graph TD
+D[数据加载器] --data--> M[模型] -- output--> G
+G[梯度计算] -.grad.-> O[优化器] -.delta.-> M
+M -- output--> ACC[精度评估]
+
+```
+
+---
+
+
+
+---
+
+
+
+
+
+
 
 # What is Slidev?
 
